@@ -79,7 +79,7 @@ def get_products(params, access_token,
     scraper = cloudscraper.create_scraper()
     while index <= page:
         payload = {
-            "offset": 0,
+            "offset": ((index-1)*30),
             "page": index,
             "access_token": access_token,
             **params
