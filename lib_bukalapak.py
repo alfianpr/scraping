@@ -75,7 +75,7 @@ def get_access_token():
 def get_products(category, final_page, access_token):
     df_item_list = []
     scraper = cloudscraper.create_scraper()
-    for page in range (1, final_page):
+    for page in range (1, final_page+1):
         payload = {
                 "offset": ((page-1)*30),
                 "page": page,

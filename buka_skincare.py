@@ -11,7 +11,7 @@ get_products = FunctionTask(get_products)
 clean_df = FunctionTask(clean_df)
 to_csv = FunctionTask(to_csv)
 
-final_page = 11
+final_page = 100
 category = "2269"
 
 def prefect_flow():
@@ -24,5 +24,5 @@ def prefect_flow():
     return flow
 
 flow = prefect_flow()
-flow.run()
-#flow.register(project_name="scraping")
+#flow.run()
+flow.register(project_name="scraping")
