@@ -72,33 +72,35 @@ def get_access_token():
     access_token = access_token_search.group()[16:-1]
     return access_token
 
-def get_products(params, access_token, 
-                page = 60, URL="https://api.bukalapak.com/multistrategy-products"):
+def get_products(category, final_page, access_token):
     df_item_list = []
-    index = 1
     scraper = cloudscraper.create_scraper()
-    while index <= page:
+    for page in range (1, final_page):
         payload = {
-            "offset": ((index-1)*30),
-            "page": index,
-            "access_token": access_token,
-            **params
-        }
-    res = scraper.get(URL, params=payload)
+                "offset": ((page-1)*30),
+                "page": page,
+                "access_token": access_token,
+                "prambanan_override" : "true",
+                "category_id" : category,
+                "sort" : "bestselling",
+                "limit" : 30,
+                "facet" : "true",
+            }
+        res = scraper.get("https://api.bukalapak.com/multistrategy-products", params=payload)
 
-    sleep_time = random.randint(10, 50)
-    time.sleep(sleep_time/1000)
-    if res.status_code == 200:
-        body = res.json()
-        df_main = pd.json_normalize(body)
-        dataitem_json = json.loads(pd.Series.to_json(df_main["data"]))
-        df_item = pd.json_normalize(dataitem_json, record_path="0")
-        df_item_list.append(df_item)
-    if res.status_code != 200:
-        raise ValueError("Error returned: {}".format(res.status_code))
-    index = index + 1
-
-    df_scraper = pd.concat(df_item_list, ignore_index=True)
+        sleep_time = random.randint(1, 100)
+        time.sleep(sleep_time/1000)
+        if res.status_code == 200:
+            body = res.json()
+            df_main = pd.json_normalize(body)
+            dataitem_json = json.loads(pd.Series.to_json(df_main["data"]))
+            df_item = pd.json_normalize(dataitem_json, record_path="0")
+            df_item_list.append(df_item)
+            df_scraper = pd.concat(df_item_list, ignore_index=True)
+        if res.status_code != 200:
+            raise Exception("Sorry, can't connect")
+            quit()
+            
     return df_scraper
 
 def clean_df(df_scraper, timestr, SCHEMA=SCHEMA, ADD_COL_TYPE=ADD_COL_TYPE):
