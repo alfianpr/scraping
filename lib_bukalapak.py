@@ -83,7 +83,7 @@ def get_products(category, final_page, access_token):
                 "prambanan_override" : "true",
                 "category_id" : category,
                 "sort" : "bestselling",
-                "limit" : 30,
+                "limit" : 50,
                 "facet" : "true",
             }
         res = scraper.get("https://api.bukalapak.com/multistrategy-products", params=payload)

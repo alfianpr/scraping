@@ -11,7 +11,7 @@ get_products = FunctionTask(get_products)
 clean_df = FunctionTask(clean_df)
 to_excel = FunctionTask(to_excel)
 
-final_page = 100
+final_page = 350
 category = "2269"
 
 def prefect_flow():
